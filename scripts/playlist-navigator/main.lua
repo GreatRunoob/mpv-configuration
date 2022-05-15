@@ -44,7 +44,7 @@ local settings = {
 local prop_mgr = {
 	-- 用于播放列表导航ui的属性设置
     properties = {
-        osd_font_size = 35,
+        osd_font_size = 30,
         osd_color = "#FFFFFFFF", --ARGB Format
         osd_border_size = 2,
         osd_border_color = "#E0404040", --"#000000"
