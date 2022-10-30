@@ -90,3 +90,4 @@ This repository contains the configuration of MPV Player that I am using, includ
 #### 已知问题
 ##### mpv-playlist-navigator
 - 进入搜索输入模式后，需要连续键入两次 ESC 才能退出该模式且不会返回到上级播放列表，原本就自带的“特性”，暂不清楚是Bug还是特意这么设计的，我个人是不怎么喜欢，有时间会尝试着修改这部分的代码逻辑。
+- 原作者打算修复的问题：目前文件搜索如果失败后会导致无法再次进入搜索模式
