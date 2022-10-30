@@ -1,2 +1,3 @@
-watch_later
+.vscode
+.vscode/*
 watch_later/*
