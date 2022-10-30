@@ -65,7 +65,11 @@ local prop_mgr = {
 
 local state = {
     saved_cursor_pos = 0,
-    in_search_display = false,
+    in_search_display = false,	-- 当前是否处于显示搜索结果的环节
+	in_search_input = false,	-- Add: 当前是否处于输入搜索关键词的环节
+	
+	in_search_failed = false,	-- Fixed: 当前是否因为关键词或搜索结果为空导致检索失败
+	
     -- like the playlist from mpv, this will be 0-based
 	-- 与mpv的播放列表类似，这（search_filtered_playlist）是基于0的索引计数
     -- rows are tuple {playlist-index, filename}
@@ -127,9 +131,14 @@ function handle_exit_key()
         pl.cursor = state.saved_cursor_pos
         state.saved_cursor_pos = 0
         state.in_search_display = false
+		state.in_search_failed = false	-- Fixed: 清除潜在的搜索失败印记
         state.search_filtered_playlist = {}
         state.search_term = "n/a"
         show_playlist()
+	elseif state.in_search_input then	-- Add: 用户取消搜索输入
+		search.input_string = ""		-- Add: 清空输入
+		state.in_search_input = false	-- Add: 将搜索输入状态置为false
+		show_playlist()					-- Add: 显示播放列表，相当于返回上级
     else
         exit_playlist_navigator()
     end
@@ -147,6 +156,7 @@ end
 
 -- （选择光标）向上滚动
 function scroll_up()
+	if state.in_search_failed then return end	-- Fixed: 不响应搜索结果为空的向上滚动事件
     pl:increment()
     if state.in_search_display then
         show_search_filtered_playlist()
@@ -157,6 +167,7 @@ end
 
 -- （选择光标）向下滚动
 function scroll_down()
+	if state.in_search_failed then return end	-- Fixed: 不响应搜索结果为空的向下滚动事件
     pl:decrement()
     if state.in_search_display then
         show_search_filtered_playlist()
@@ -169,6 +180,7 @@ end
 -- 从播放列表中移除文件项
 function remove_file()
     if pl.len == 0 then return end
+	if state.in_search_display then return end	-- Add: 不响应显示搜索结果阶段的BS事件
     mp.commandv("playlist-remove", pl.cursor)
     pl.cursor = pl.cursor - 1
     if pl.cursor < 0 then pl.cursor = 0 end
@@ -180,6 +192,7 @@ end
 
 -- 处理enter按键事件
 function handle_enter_key()
+	if state.in_search_failed then return end	-- Fixed: 不响应搜索结果为空的Enter事件
     if state.in_search_display then
         -- calculate playlist index
 		-- 计算播放列表索引
@@ -193,22 +206,32 @@ end
 
 -- 显示经过搜索过滤后的播放列表
 function show_search_filtered_playlist(duration)
-    files_only_array = {}
-    -- need 0-based array for line formatting
+	if next(state.search_filtered_playlist) == nil then
+		state.in_search_failed = true
+		output = "文件匹配: "..state.search_term.."\n"
+		output = output.."[ESC 返回播放列表]\n"
+		output = output.."无搜索结果\n"
+		mp.osd_message(output, (tonumber(duration) or settings.osd_duration_seconds))
+		return
+	end
+	files_only_array = {}
+	-- need 0-based array for line formatting
 	-- 需要基于0索引计数的数组用于单行的格式化
-    for i=0, #state.search_filtered_playlist do
-        files_only_array[i] = state.search_filtered_playlist[i][2]
-    end
+	for i=0, #state.search_filtered_playlist do
+		files_only_array[i] = state.search_filtered_playlist[i][2]
+	end
 	-- 文件项匹配中
 	-- [<ENTER>键载入，<ESC>键返回播放列表]
-    output = "文件匹配: "..state.search_term.."\n"
-    output = output.."[Enter 载入文件, ESC 返回播放列表]\n"
-    output = output..pl:format_lines(files_only_array).."\n"
-    mp.osd_message(output, (tonumber(duration) or settings.osd_duration_seconds))
+	output = "文件匹配: "..state.search_term.."\n"
+	output = output.."[Enter 载入文件, ESC 返回播放列表]\n"
+	output = output..pl:format_lines(files_only_array).."\n"
+	mp.osd_message(output, (tonumber(duration) or settings.osd_duration_seconds))
 end
 
 -- 在搜索内容输入完成后需要进行的工作
 function on_search_input_done()
+	-- Add: 此时离开了搜索输入模式，因此需要把状态标记设为false
+	state.in_search_input = false
     state.in_search_display = true
     -- set up iteration for search results
 	-- 为搜索结果设置迭代（标识）
@@ -233,7 +256,10 @@ end
 
 -- 进入“搜索输入”模式
 function enter_search_input_mode()
-    search:enter_input_mode(on_search_input_done)
+	-- Change: 传入两个回调函数，前者处理Enter事件即搜索关键词输入完毕，后者处理ESC事件即立即取消搜索输入
+    search:enter_input_mode(on_search_input_done, handle_exit_key)
+	-- Add: 正常进入搜索输入模式后，需要把状态标记设为true
+	state.in_search_input = true
 end
 
 -- load file at playlist_index

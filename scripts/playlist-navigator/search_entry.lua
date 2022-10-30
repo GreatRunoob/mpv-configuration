@@ -13,7 +13,9 @@
 local search = {
     -- function to call when user finishes entering input
 	-- 当用户结束输入时需要被调用的函数
-    finished_callback = nil
+    finished_callback = nil,
+	-- 当用户取消输入时需要被调用的函数
+	canceled_callback = nil
 }
 
 -- characters handled for inputting search
@@ -31,9 +33,10 @@ search.input_string = ""
 -- 进入搜索模式
 -- input search term
 -- 输入搜索词
-function search:enter_input_mode(callback)
+function search:enter_input_mode(finished_callback, canceled_callback)
 	-- 函数回调
-    self.finished_callback = callback
+    self.finished_callback = finished_callback
+	self.canceled_callback = canceled_callback
     add_search_keybindings()
     self:show_input()
 end
@@ -41,7 +44,10 @@ end
 -- 显示输入的（搜索）内容
 function search:show_input(duration)
 	-- 搜索：<input>
-    input_line = "搜索: "..self.input_string
+	-- 自行添加了操作指示
+	input_line = "[Enter 开始搜索, ESC 返回播放列表]\n"
+	-- 原先的指示是“搜索”
+    input_line = input_line.."关键词: "..self.input_string
     mp.osd_message(input_line, (tonumber(duration) or settings.osd_duration_seconds))
 end
 
@@ -54,6 +60,7 @@ end
 -- 处理搜索模式下esc事件
 function handle_search_escape()
     remove_search_keybindings()
+	search.canceled_callback()
 end
 
 -- 处理backspace事件（搜索/导航模式通用）
