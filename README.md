@@ -26,11 +26,12 @@ This repository contains the configuration of MPV Player that I am using, includ
 ## 多媒体播放软件
 ### MPV Player
 特别鸣谢：MPV Player开发团队<br>
-项目地址：[mpv](https://github.com/mpv-player/mpv)
-用户脚本：[User-Scripts](https://github.com/mpv-player/mpv/wiki/User-Scripts)
+项目地址：[mpv](https://github.com/mpv-player/mpv)<br>
+用户脚本：[User-Scripts](https://github.com/mpv-player/mpv/wiki/User-Scripts)<br>
 本仓库的快捷键设置：<br>
 - WHEEL_UP    音量 +2
 - WHEEL_DOWN  音量 -2
+
 其余同官方默认<br>
 
 </br>
@@ -38,14 +39,13 @@ This repository contains the configuration of MPV Player that I am using, includ
 ## 功能拓展脚本
 ### mpv-playlist-navigator (播放列表扩展)
 特别鸣谢：Dave Rogers drogers141<br>
-项目地址：[mpv-playlist-navigator](https://github.com/drogers141/mpv-playlist-navigator)
-本仓库的快捷键设置：脚本默认 (仿vim)<br>
-详情见 [scripts/playlist-navigator/main.lua](scripts/playlist-navigator/main.lua) 底部注释说明
-备注：我尽可能地翻译、补充了脚本文件中的注释内容，以便您快速了解各代码段的功能进行自定义修改；微调了脚本的部分行为，详情见更新日志，所以本仓库收录的脚本与原项目有一定的差异。<br>
+项目地址：[mpv-playlist-navigator](https://github.com/drogers141/mpv-playlist-navigator)<br>
+本仓库的快捷键设置：脚本默认 (仿vim)，详情见 [scripts/playlist-navigator/main.lua](scripts/playlist-navigator/main.lua) 底部注释说明<br>
+备注：我尽可能地翻译、补充了脚本文件中的注释内容，以便您快速了解各代码段的功能进行自定义修改；微调了脚本的部分行为，所以本仓库收录的脚本与原项目有一定的差异，详情见更新日志。<br>
 
 ### Anime4K v4.0.1 stable (实时渲染着色器)
 特别鸣谢：Anime4K开发团队<br>
-项目地址：[Anime4K](https://github.com/bloc97/Anime4K)
+项目地址：[Anime4K](https://github.com/bloc97/Anime4K)<br>
 本仓库的快捷键设置：<br>
 - Ctrl + 1  模式A
 - Ctrl + 2  模式B
@@ -57,11 +57,12 @@ This repository contains the configuration of MPV Player that I am using, includ
 - Ctrl + 8  模式B
 - Ctrl + 9  模式C
 - Ctrl + 0  清除着色器
+
 详情见 [input.conf](input.conf) 相关注释说明。<br>
 
 ### 更多已经或正在尝试汉化的 MPV Player 开源“周边”
 特别鸣谢：FinnR (bili-uid: 111138665)<br>
-作品地址：[mpv player脚本部分汉化](https://www.bilibili.com/read/cv19251824)
+作品地址：[mpv player脚本部分汉化](https://www.bilibili.com/read/cv19251824)<br>
 
 <br>
 
@@ -77,6 +78,7 @@ This repository contains the configuration of MPV Player that I am using, includ
 - 汉化脚本OSD菜单说明 (脚本调试菜单未汉化，一般也用不到)
 - 修改OSD背景颜色为紫色、字体大小为24、文字边框颜色为黑色使之更贴合mpv的主题，位置：[scripts/playlist-navigator/main.lua](scripts/playlist-navigator/main.lua)
 - 调节列表文件状态指示图标及其行为，个人不太喜欢原先允许图标重叠的样式，现在每种状态的列表文件仅对应一种图标，位置：[scripts/playlist-navigator/playlist.lua](scripts/playlist-navigator/playlist.lua)
+
 最终效果演示：<br>
 ![Sample](img-sample/mpv-playlist-navigator.png)
 
