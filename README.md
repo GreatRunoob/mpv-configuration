@@ -70,6 +70,17 @@ This repository contains the configuration of MPV Player that I am using, includ
 之前都忘记写更新日志了（逃<br>
 ### 2022/10/30
 #### 优化
+##### mpv-playlist-navigator
+- 进入搜索输入模式后仅需按下 ESC 一次即可返回上级播放列表
+
+#### 修复
+##### mpv-playlist-navigator
+- 临时修复搜索结果为空后会导致无法再次进入搜索模式（脚本崩溃）的问题，本方案仅作为临时修补，脚本原作者正在修复中
+
+<br>
+
+### 2022/10/30
+#### 优化
 ##### MPV Player
 - OSD字体大小调整为36，位置：[mpv.conf](mpv.conf)
 - 视频硬解API方案选择调整为 auto-safe，位置：[mpv.conf](mpv.conf)
