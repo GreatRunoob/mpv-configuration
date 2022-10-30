@@ -41,7 +41,7 @@ end
 -- 显示输入的（搜索）内容
 function search:show_input(duration)
 	-- 搜索：<input>
-    input_line = "Search: "..self.input_string
+    input_line = "搜索: "..self.input_string
     mp.osd_message(input_line, (tonumber(duration) or settings.osd_duration_seconds))
 end
 

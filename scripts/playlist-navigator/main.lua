@@ -44,11 +44,11 @@ local settings = {
 local prop_mgr = {
 	-- 用于播放列表导航ui的属性设置
     properties = {
-        osd_font_size = 30,
-        osd_color = "#FFFFFFFF", --ARGB Format
+        osd_font_size = 24,
+        osd_color = "#FFFFFFFF", --ARGB Format "#FFFFFFFF"
         osd_border_size = 2,
-        osd_border_color = "#E0404040", --"#000000"
-        osd_back_color = "#E0404040"
+        osd_border_color = "#E0000000", --"#E0404040"
+        osd_back_color = "#E0521262"	--"#E0404040"
     },
 	
 	-- 用于打印 mpv OSD当前各项属性的ui设置，适用于调试
@@ -83,6 +83,8 @@ end
 -- entry point for playlist manager
 -- 播放列表管理器入口
 function start_playlist_navigator()
+	-- 临时设置并覆盖原OSD样式，但这也会导致列表导航器出于开启状态时
+	-- 播放器自身在切换曲目显示的OSD样式也随之改变的缺陷
     prop_mgr.set_properties()
     pl:init()
     add_keybindings()
@@ -112,8 +114,8 @@ function show_playlist(duration)
 
     -- 正在播放/媒体文件标题
 	-- 播放列表/[<ENTER>键载入，<ESC>键退出，</>键搜索]
-	output = "Playing: "..mp.get_property('media-title').."\n\n"
-    output = output.."Playlist - "..(pl.cursor+1).." / "..pl.len.."        [Enter to load, ESC to quit, / to search]\n"
+	output = "正在播放: "..mp.get_property('media-title').."\n\n"
+    output = output.."播放列表 - "..(pl.cursor+1).." / "..pl.len.."        [Enter 载入, ESC 退出, / 搜索]\n"
     output = output..pl:format_lines(pl:get_playlist())
     mp.osd_message(output, (tonumber(duration) or settings.osd_duration_seconds))
 end
@@ -199,8 +201,8 @@ function show_search_filtered_playlist(duration)
     end
 	-- 文件项匹配中
 	-- [<ENTER>键载入，<ESC>键返回播放列表]
-    output = "Files Matching: "..state.search_term.."\n"
-    output = output.."[Enter to load file, ESC to return to playlist]\n"
+    output = "文件匹配: "..state.search_term.."\n"
+    output = output.."[Enter 载入文件, ESC 返回播放列表]\n"
     output = output..pl:format_lines(files_only_array).."\n"
     mp.osd_message(output, (tonumber(duration) or settings.osd_duration_seconds))
 end

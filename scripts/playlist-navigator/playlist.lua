@@ -20,8 +20,9 @@ local settings = {
 
     -- display line prefixes
 	-- 显示行的前缀字符串标识（自定义）
-    playing_str = "✔",	-- 当前正在播放
-    cursor_str = "🐾"	-- 当前光标选项
+    playing_str = "▶",	-- 当前正在播放
+    cursor_str = "◉",	-- 当前光标选项
+	unchecked_str = "⭕"	-- 当前未选中
 }
 
 -- this object is exported
@@ -103,11 +104,16 @@ function playlist:short_list_display_lines(_playlist)
     local display_files = {}
     for i = 0, #_playlist do
         display_files[i+1] = _playlist[i]
+		-- 对下列 if 逻辑进行了调整，现改为 if-elseif-else 增加了对当前未选中曲目的图标
+		-- 个人不太喜欢原先允许图标重叠的样式，现在每种状态的列表文件仅对应一种图标
+		-- 例如当前播放的文件会优先显示播放图标，若选中则不会额外显示选中图标
+		-- 图标显示的优先级为: 播放▶ > 选中◉ > 未选中⭕
         if i == self.pos then
-            display_files[i+1] = settings.playing_str..display_files[i+1]
-        end
-        if i == self.cursor then
-            display_files[i+1] = settings.cursor_str..display_files[i+1]
+            display_files[i+1] = settings.playing_str..display_files[i+1]	-- 当前正在播放的文件
+        elseif i == self.cursor then
+            display_files[i+1] = settings.cursor_str..display_files[i+1]	-- 当前选中的文件
+		else
+			display_files[i+1] = settings.unchecked_str..display_files[i+1]	-- 当前未选中的文件
         end
     end
     return display_files
@@ -132,11 +138,13 @@ function playlist:long_list_display_lines(_playlist)
             index = i
         end
         display_files[#display_files+1] = _playlist[index]
+		-- 同理，此处也做了和上文一样的改动
         if index == self.pos then
             display_files[#display_files] = settings.playing_str..display_files[#display_files]
-        end
-        if index == self.cursor then
+        elseif index == self.cursor then
             display_files[#display_files] = settings.cursor_str..display_files[#display_files]
+		else
+			display_files[#display_files] = settings.unchecked_str..display_files[#display_files]
         end
     end
     return display_files
